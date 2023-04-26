@@ -2,13 +2,6 @@ pub struct Solution;
 
 use std::collections::HashMap;
 
-#[derive(Debug, Clone, Copy)]
-enum MemoResult {
-    Unscrambled(usize),
-    Scrambled(usize),
-    Invalid,
-}
-
 impl Solution {
     pub fn is_scramble(s1: String, s2: String) -> bool {
         if s1.len() != s2.len() {
@@ -20,37 +13,22 @@ impl Solution {
         }
     }
 
-    fn count_chars(split: &str) -> HashMap<char, u32> {
-        let mut charcount = HashMap::new();
+    fn count_chars(split: &str) -> [u32; 26] {
+        let mut charcount = [0;26];
         for schar in split.chars() {
-            charcount.entry(schar)
-                .and_modify(|num| *num += 1)
-                .or_insert(1);
+            let charnum = schar as usize - 97;
+            charcount[charnum] += 1;
         }
         return charcount;
     }
 
-    fn is_scramble_recurse<'a>(s1: &'a str, s2: &'a str, memo: &mut HashMap<(&'a str, &'a str), MemoResult>) -> bool {
+    fn is_scramble_recurse<'a>(s1: &'a str, s2: &'a str, memo: &mut HashMap<(&'a str, &'a str), bool>) -> bool {
         if s1 == s2 {
             return true;
         }
         else if let Some(memo_result) = memo.get(&(s1, s2)) {
             //println!("({s1}) -> ({s2}) Memo'd: {memo_result:?}");
-            match memo_result {
-                MemoResult::Invalid => return false,
-                MemoResult::Unscrambled(index) => {
-                    let s1_split = s1.split_at(*index);
-                    let s2_split = s2.split_at(*index);
-                    return Self::is_scramble_recurse(s1_split.0, s2_split.0, memo) &&
-                        Self::is_scramble_recurse(s1_split.1, s2_split.1, memo);
-                },
-                MemoResult::Scrambled(index) => {
-                    let s1_split = s1.split_at(*index);
-                    let s2_split = s2.split_at(s2.len() - *index);
-                    return Self::is_scramble_recurse(s1_split.0, s2_split.1, memo) &&
-                        Self::is_scramble_recurse(s1_split.1, s2_split.0, memo);
-                }
-            }
+            return *memo_result;
         }
         // Find the index of the split
         for i in 1..s1.len() {
@@ -73,7 +51,7 @@ impl Solution {
                 if Self::is_scramble_recurse(s1_split.0, s2_split.0, memo) &&
                     Self::is_scramble_recurse(s1_split.1, s2_split.1, memo)
                 {
-                    memo.insert((s1, s2), MemoResult::Unscrambled(i));
+                    memo.insert((s1, s2), true);
                     return true;
                 }
             }
@@ -89,13 +67,13 @@ impl Solution {
                 // This is the correct split index, and it was shuffled
                 if Self::is_scramble_recurse(s1_split.0, s2_split_shuffled.1, memo) &&
                     Self::is_scramble_recurse(s1_split.1, s2_split_shuffled.0, memo) {
-                        memo.insert((s1, s2), MemoResult::Scrambled(i));
+                        memo.insert((s1, s2), true);
                         return true;
                     }
             }
         }
 
-        memo.insert((s1, s2), MemoResult::Invalid);
+        memo.insert((s1, s2), false);
         return false;
     }
 }
