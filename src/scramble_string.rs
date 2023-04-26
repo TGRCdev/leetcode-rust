@@ -56,7 +56,6 @@ impl Solution {
         for i in 1..s1.len() {
             let s1_split = s1.split_at(i);
             let s2_split = s2.split_at(i);
-            let s2_split_shuffled = s2.split_at(s2.len() - i);
             let s1_charcounts = (
                 Self::count_chars(s1_split.0),
                 Self::count_chars(s1_split.1),
@@ -65,30 +64,32 @@ impl Solution {
                 Self::count_chars(s2_split.0),
                 Self::count_chars(s2_split.1),
             );
-            let s2_charcounts_shuffled = (
-                Self::count_chars(s2_split_shuffled.0),
-                Self::count_chars(s2_split_shuffled.1),
-            );
 
             if s1_charcounts.0 == s2_charcounts.0 &&
                 s1_charcounts.1 == s2_charcounts.1
             {
                 // This is the correct split index
                 //println!("String might have been split at {i} into {} and {}", s1_split.0, s1_split.1);
-                memo.insert((s1, s2), MemoResult::Unscrambled(i));
                 if Self::is_scramble_recurse(s1_split.0, s2_split.0, memo) &&
                     Self::is_scramble_recurse(s1_split.1, s2_split.1, memo)
                 {
+                    memo.insert((s1, s2), MemoResult::Unscrambled(i));
                     return true;
                 }
             }
+
+            let s2_split_shuffled = s2.split_at(s2.len() - i);
+            let s2_charcounts_shuffled = (
+                Self::count_chars(s2_split_shuffled.0),
+                Self::count_chars(s2_split_shuffled.1),
+            );
             if s1_charcounts.0 == s2_charcounts_shuffled.1 &&
                 s1_charcounts.1 == s2_charcounts_shuffled.0 {
                 //println!("String might have been split at {i} and shuffled into {} and {}", s1_split.1, s1_split.0);
                 // This is the correct split index, and it was shuffled
-                memo.insert((s1, s2), MemoResult::Scrambled(i));
                 if Self::is_scramble_recurse(s1_split.0, s2_split_shuffled.1, memo) &&
                     Self::is_scramble_recurse(s1_split.1, s2_split_shuffled.0, memo) {
+                        memo.insert((s1, s2), MemoResult::Scrambled(i));
                         return true;
                     }
             }
