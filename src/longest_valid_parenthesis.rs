@@ -1,20 +1,41 @@
 pub struct Solution;
 
+#[derive(Debug, Clone, Copy)]
+enum Layer {
+    Inside(usize),
+    Outside(usize),
+}
+
 impl Solution {
     pub fn longest_valid_parentheses(s: String) -> i32 {
-        let mut stack: Vec<usize> = Vec::new();
+        let mut stack: Vec<Layer> = Vec::new();
         let mut longest: usize = 0;
         for (i, nextchar) in s.chars().enumerate() {
             match nextchar {
-                '(' => stack.push(i),
-                ')' => {
-                    if stack.len() > 1 {
-                        stack.pop();
-                        let start = stack.last().unwrap();
-                        longest = longest.max((i+1) - start);
+                '(' => {
+                    match stack.last() {
+                        Some(Layer::Inside(_)) | None => stack.push(Layer::Inside(i)),
+                        Some(Layer::Outside(start)) => {
+                            *stack.last_mut().unwrap() = Layer::Inside(*start);
+                        }
                     }
-                    else if !stack.is_empty() {
-                        stack[0] = i;
+                },
+                ')' => {
+                    match stack.last().cloned() {
+                        Some(Layer::Outside(_)) => {
+                            stack.pop();
+                            if let Some(layer) = stack.last_mut() {
+                                let (Layer::Inside(start) | Layer::Outside(start)) = layer;
+                                let start = *start;
+                                *layer = Layer::Outside(start);
+                                longest = longest.max((i+1) - start);
+                            }
+                        },
+                        Some(Layer::Inside(start)) => {
+                            *stack.last_mut().unwrap() = Layer::Outside(start);
+                            longest = longest.max((i+1) - start);
+                        },
+                        None => (),
                     }
                 },
                 _ => panic!("Unexpected character {}", nextchar),
