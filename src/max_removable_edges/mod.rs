@@ -4,13 +4,12 @@ pub struct Solution;
 
 #[derive(Debug, Clone)]
 pub struct DisjointSet {
-    parent: Vec<usize>,
-    size: usize,
+    parent: Box<[usize]>,
 }
 
 impl DisjointSet {
     pub fn find(&mut self, i: usize) -> usize {
-        assert!(i < self.size);
+        assert!(i < self.parent.len());
 
         if self.parent[i] == i {
             return i;
@@ -24,8 +23,8 @@ impl DisjointSet {
     }
 
     pub fn union(&mut self, i: usize, j: usize) {
-        assert!(i < self.size);
-        assert!(j < self.size);
+        assert!(i < self.parent.len());
+        assert!(j < self.parent.len());
 
         let irep = self.find(i);
         let jrep = self.find(j);
@@ -36,7 +35,6 @@ impl DisjointSet {
     pub fn new(size: usize) -> Self {
         Self {
             parent: (0..size).collect(),
-            size,
         }
     }
 
