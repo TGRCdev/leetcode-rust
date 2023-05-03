@@ -6,6 +6,7 @@ pub struct ListNode {
 
 impl ListNode {
   #[inline]
+  #[allow(unused)]
   fn new(val: i32) -> Self {
     ListNode {
       next: None,
@@ -58,11 +59,4 @@ impl Solution {
 
 		return Some(root);
     }
-}
-
-#[test]
-fn test() {
-	fn test_merge(lists: Vec<Vec<i32>>) {
-		
-	}
 }

@@ -1,8 +1,10 @@
-mod wildcard_matching;
-mod scramble_string;
-mod merge_k_sorted_lists;
-mod longest_valid_parenthesis;
-mod maximize_prefix_score;
-mod max_removable_edges;
-mod reverse_nodes;
-mod regular_expression_matching;
+
+
+pub mod wildcard_matching;
+pub mod scramble_string;
+pub mod merge_k_sorted_lists;
+pub mod longest_valid_parenthesis;
+pub mod maximize_prefix_score;
+pub mod max_removable_edges;
+pub mod reverse_nodes;
+pub mod regular_expression_matching;
