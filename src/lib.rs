@@ -8,3 +8,4 @@ pub mod maximize_prefix_score;
 pub mod max_removable_edges;
 pub mod reverse_nodes;
 pub mod regular_expression_matching;
+pub mod substring_concatenation;
