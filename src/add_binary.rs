@@ -11,6 +11,8 @@ impl Solution {
 			std::mem::swap(&mut a, &mut b);
 		}
 
+		a.reverse();
+
 		const CHAR_0: u8 = 48;
 		const CHAR_1: u8 = 49;
 
@@ -21,7 +23,7 @@ impl Solution {
 					// '1'
 					let a_len = a.len();
 					if a_len > i {
-						for a_byte in a[..a_len-i].iter_mut().rev() {
+						for a_byte in a[i..].iter_mut() {
 							match *a_byte {
 								CHAR_0 => {
 									*a_byte = CHAR_1;
@@ -35,11 +37,13 @@ impl Solution {
 						}
 					}
 					// Push new digit
-					a.insert(0, CHAR_1);
+					a.push(CHAR_1);
 				}
 				_ => panic!("Unknown character in input"),
 			}
 		}
+
+		a.reverse();
 
 		return unsafe { String::from_utf8_unchecked(a) };
     }
@@ -57,4 +61,5 @@ fn test() {
 	add_test("1010", "1011", "10101");
 	add_test("1", "111", "1000");
 	add_test("11011001110011", "1011", "11011001111110");
+	add_test("100", "110010", "110110");
 }
