@@ -9,3 +9,4 @@ pub mod regular_expression_matching;
 pub mod substring_concatenation;
 pub mod divide_two_integers;
 pub mod strong_password_checker;
+pub mod dota_senate;
