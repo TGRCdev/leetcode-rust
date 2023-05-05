@@ -13,3 +13,4 @@ pub mod dota_senate;
 pub mod add_binary;
 pub mod max_vowels;
 pub mod array_difference;
+pub mod array_product_sign;
