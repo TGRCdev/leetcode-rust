@@ -28,8 +28,8 @@ impl Solution {
         }
         let mut vowel_count: usize = s.bytes()
             .take(k)
-            .map(|byte| is_vowel(byte) as usize)
-            .sum();
+            .filter(|&byte| is_vowel(byte))
+            .count();
         let mut highest_vowel_count = vowel_count;
         let mut vowel_at_start = is_vowel(s.as_bytes()[0]);
         
@@ -49,4 +49,17 @@ impl Solution {
 
         return highest_vowel_count as i32;
     }
+}
+
+#[test]
+fn test() {
+    fn test_vowels(input: &str, k: usize, expected: i32) {
+        let result = Solution::max_vowels(input.to_string(), k as i32);
+        println!("(len = {}, k = {k}) = {result} (Expected {expected})", input.len());
+        assert_eq!(result, expected);
+    }
+
+    test_vowels("aeiou", 3, 3);
+    test_vowels("leetcode", 3, 2);
+    test_vowels("abciiidef", 3, 3);
 }
