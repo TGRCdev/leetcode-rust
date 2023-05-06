@@ -15,3 +15,4 @@ pub mod max_vowels;
 pub mod array_difference;
 pub mod array_product_sign;
 pub mod average_salary;
+pub mod grid_game;
