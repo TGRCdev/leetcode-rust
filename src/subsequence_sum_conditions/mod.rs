@@ -9,38 +9,68 @@ impl Solution {
 		const MOD: u32 = 1000000007;
         nums.sort_unstable();
 
-		fn count_subsequences(mut nums: &[i32], target: i32) -> u32 {
-			let mut depth = 0;
-			loop {
-				match nums.len() {
-					0 => return 0,
-					1 => {
-						if nums[0] + nums[0] <= target {
-							let mut num = 1;
-							for _ in 0..depth {
-								num = (num * 2) % MOD;
-							}
-							return num;
-						}
-						else {
-							return 0;
-						}
-					},
-					_ => {
-						if nums[0] + nums[nums.len()-1] <= target {
-							depth += 1;
-							
-						}
-						nums = &nums[..nums.len()-1];
-					}
+		fn binary_search_highest(nums: &[i32], target: i32) -> Option<usize> {
+			use std::cmp::Ordering::*;
+			if nums.len() == 0 {
+				return None;
+			}
+			else if nums.len() == 1 {
+				if nums[0] <= target {
+					return Some(0);
 				}
+				else {
+					return None;
+				}
+			}
+			let mut mid = nums.len() / 2;
+			match target.cmp(&nums[mid]) {
+				Greater => {
+					return binary_search_highest(&nums[mid..], target).map(|i| i+mid);
+				},
+				Less => {
+					return binary_search_highest(&nums[..mid], target);
+				},
+				Equal => {
+					while mid < nums.len()-1 && nums[mid+1] == target {
+						mid += 1;
+					}
+					return Some(mid);
+				},
+			}
+		}
+
+		fn count_subsequences(nums: &[i32], target: i32) -> u32 {
+			let end = binary_search_highest(nums, target-nums[0]);
+
+			const MAX_SHIFT: u8 = 98;
+
+			if let Some(mut end) = end {
+				let mut result: u128 = 1;
+				while end > 0 {
+					let shift = end.min(MAX_SHIFT as usize);
+					result = (result << shift) % MOD as u128;
+					end -= shift;
+				}
+				return result as u32;
+			}
+			else {
+				return 0;
 			}
 		}
 
 		let mut sequences = 0;
 
-		for i in 0..nums.len() {
-			sequences = (sequences + count_subsequences(&nums[i..], target)) % MOD;
+		let highest = binary_search_highest(&nums, target-nums[0]);
+		if highest.is_none() {
+			return 0;
+		}
+
+		for i in 0..=highest.unwrap() {
+			let next_sequences = count_subsequences(&nums[i..], target);
+			if next_sequences == 0 {
+				break;
+			}
+			sequences = (sequences + next_sequences) % MOD;
 		}
 
 		return sequences as i32;
@@ -51,7 +81,8 @@ impl Solution {
 fn test() {
 	fn test_subsequences(nums: &[i32], target: i32, expected: i32) {
 		let result = Solution::num_subseq(nums.to_vec(), target);
-		println!("{nums:?} target {target} = {result} (Expected {expected})");
+		println!("{{len {}}} target {target} = {result} (Expected {expected})", nums.len());
+		assert_eq!(result, expected);
 	}
 
 	test_subsequences(&[3,5,6,7], 9, 4);
@@ -77,4 +108,5 @@ fn test() {
 		119238,
 		905345521,
 	);
+	test_subsequences(&[5,2,4,1,7,6,8], 16, 127);
 }
