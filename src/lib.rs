@@ -15,6 +15,6 @@ pub mod max_vowels;
 pub mod array_difference;
 pub mod array_product_sign;
 pub mod average_salary;
-//pub mod grid_game;
+pub mod grid_game;
 pub mod find_and_replace_pattern;
 pub mod subsequence_sum_conditions;
