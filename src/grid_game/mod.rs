@@ -4,36 +4,20 @@ pub struct Solution;
 
 impl Solution {
     pub fn grid_game(grid: Vec<Vec<i32>>) -> i64 {
-        /*
-        println!("Before");
-        println!("{:?}\n{:?}", grid[0], grid[1]);
-        */
+        
+        let mut left: i64 = grid[0][1..].iter().map(|i| *i as i64).sum();
+        let mut right: i64 = 0;
+        let mut lowest = left.max(right);
 
         let grid_len = grid[0].len();
 
-        let mut sums_after_red = (
-            vec![0i64; grid_len],
-            vec![0i64; grid_len],
-        );
+        for (num1, num2) in grid[0][1..].iter().zip(&grid[1][..grid_len-1]) {
+            left -= *num1 as i64;
+            right += *num2 as i64;
+            lowest = lowest.min(left.max(right));
+        };
 
-        for i in (0..grid_len-1).rev() {
-            sums_after_red.0[i] = sums_after_red.0[i+1] + grid[0][i+1] as i64;
-        }
-
-        for i in 1..grid_len {
-            sums_after_red.1[i] = sums_after_red.1[i-1] + grid[1][i-1] as i64;
-        }
-    
-        /*
-        println!("After");
-        println!("{:?}\n{:?}", sums_after_red.0, sums_after_red.1);
-        */
-
-        return sums_after_red.0.into_iter()
-            .zip(sums_after_red.1.into_iter())
-            .map(|(topsum, bottomsum)| topsum.max(bottomsum) as i64)
-            .min()
-            .unwrap();
+        return lowest;
     }
 }
 
