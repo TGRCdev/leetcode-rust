@@ -23,3 +23,4 @@ pub mod frequency_tracker;
 pub mod adjacent_elements_same_color;
 pub mod longest_increasing_subsequence;
 pub mod longest_obstacle_course;
+pub mod multiply_strings;
