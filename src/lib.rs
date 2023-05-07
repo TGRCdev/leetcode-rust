@@ -21,3 +21,4 @@ pub mod subsequence_sum_conditions;
 pub mod distinct_difference_array;
 pub mod frequency_tracker;
 pub mod adjacent_elements_same_color;
+pub mod longest_increasing_subsequence;
