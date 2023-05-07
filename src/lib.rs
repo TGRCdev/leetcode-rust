@@ -26,3 +26,4 @@ pub mod longest_obstacle_course;
 pub mod multiply_strings;
 pub mod plus_one;
 pub mod add_two_numbers;
+pub mod sum_of_two_integers;
