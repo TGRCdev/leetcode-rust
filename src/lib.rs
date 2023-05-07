@@ -18,3 +18,6 @@ pub mod average_salary;
 pub mod grid_game;
 pub mod find_and_replace_pattern;
 pub mod subsequence_sum_conditions;
+pub mod distinct_difference_array;
+pub mod frequency_tracker;
+pub mod adjacent_elements_same_color;
