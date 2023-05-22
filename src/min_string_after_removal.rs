@@ -4,21 +4,24 @@ pub struct Solution;
 
 impl Solution {
     pub fn min_length(s: String) -> i32 {
-        let mut s = s.into_bytes();
-        const AB: &[u8] = &[65, 66];
-        const CD: &[u8] = &[67, 68];
-        'outer: loop {
-            for i in 0..s.len()-1 {
-                if matches!(&s[i..=i+1], AB | CD) {
-                    s[i..].rotate_left(2);
-                    s.truncate(s.len()-2);
-                    if s.len() == 0 { return 0; }
-                    continue 'outer;
-                }
+        let mut stack = Vec::with_capacity(s.len());
+        const AB: (u8, u8) = (65, 66);
+        const CD: (u8, u8) = (67, 68);
+        for char in s.into_bytes().into_iter() {
+            if stack.is_empty() {
+                stack.push(char);
+                continue;
             }
-            break; // No more matches
+
+            let last_char = *stack.last().unwrap();
+            if matches!((last_char, char), AB | CD) {
+                stack.pop();
+            }
+            else {
+                stack.push(char);
+            }
         }
-        s.len() as i32
+        stack.len() as i32
     }
 }
 
