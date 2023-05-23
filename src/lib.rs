@@ -33,3 +33,4 @@ pub mod spiral_matrix;
 pub mod spiral_matrix_2;
 pub mod uncrossed_lines;
 pub mod min_string_after_removal;
+pub mod lexicographically_smallest_palindrome;
