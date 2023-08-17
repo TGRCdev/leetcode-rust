@@ -35,3 +35,4 @@ pub mod uncrossed_lines;
 pub mod min_string_after_removal;
 pub mod lexicographically_smallest_palindrome;
 pub mod sliding_window_maximum;
+pub mod zeroone_matrix;
