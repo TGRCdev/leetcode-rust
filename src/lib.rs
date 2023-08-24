@@ -38,3 +38,4 @@ pub mod sliding_window_maximum;
 pub mod zeroone_matrix;
 pub mod find_critical_edges;
 pub mod excel_sheet_column_name;
+pub mod reorganize_string;
