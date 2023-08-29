@@ -2,63 +2,72 @@
 
 pub struct Solution;
 
+#[derive(Debug,Clone,Copy,Ord,Eq)]
+pub struct CharCount(pub u8, pub u16);
+
+impl PartialOrd for CharCount {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.1.cmp(&other.1))
+    }
+}
+
+impl PartialEq for CharCount {
+    fn eq(&self, other: &Self) -> bool {
+        self.1 == other.1
+    }
+}
+
+impl From<(u8,u16)> for CharCount {
+    fn from(value: (u8,u16)) -> Self {
+        Self(value.0,value.1)
+    }
+}
+
 impl Solution {
     pub fn reorganize_string(s: String) -> String {
+        use std::collections::{BinaryHeap, HashMap};
+        use std::iter::FromIterator;
         let len = s.len();
-        use std::collections::HashMap;
-        let mut charcount = HashMap::new();
-        s.into_bytes().into_iter().for_each(|c| {
-            charcount.entry(c)
-                .and_modify(|n| *n += 1u16)
-                .or_insert(1);
-        });
-        println!("{charcount:?}");
-        let mut chars: Vec<(u8, u16)> = charcount.into_iter().collect();
-        // Descending sort
-        chars.sort_unstable_by_key(|&e| e.1);
 
-        if chars[chars.len()-1].1 as usize > ((len+1)/2) {
+        let mut charmap = HashMap::new();
+        for nextchar in s.into_bytes() {
+            charmap.entry(nextchar)
+                .and_modify(|count| *count += 1)
+                .or_insert(1u16);
+        }
+
+        let mut chars: BinaryHeap<CharCount> = BinaryHeap::from_iter(
+            charmap.into_iter()
+            .map(|charcount| charcount.into())
+        );
+
+        if chars.peek().unwrap().1 as usize > ((len+1)/2) {
             return String::default();
         }
 
-        let mut result = Vec::with_capacity(len);
-        let mut swap = false;
-        let mut index = 0;
+        let mut result: Vec<u8> = Vec::with_capacity(len);
 
-        {
-            while !chars.is_empty() {
-                let chars_len = chars.len();
-                if swap {
-                    let swap_index = chars_len-(index+2);
-                    let next_char = chars[swap_index];
-                    result.push(next_char.0);
-                    if next_char.1 <= 1 {
-                        chars.swap_remove(swap_index);
-                    }
-                    else {
-                        chars[swap_index].1 -= 1;
-                        index += 1;
-                        if index == chars_len-1 {
-                            index = 0;
-                        }
-                    }
-                    swap = !swap;
+        let mut last_char = None;
+
+        while let Some(mut charcount) = chars.pop() {
+            if Some(charcount.0) == last_char {
+                // Grab the next char instead
+                let mut nextchar = chars.pop().unwrap();
+                result.push(nextchar.0);
+                last_char = Some(nextchar.0);
+                nextchar.1 -= 1;
+                if nextchar.1 > 0 {
+                    chars.push(nextchar);
                 }
-                else {
-                    let next_char = chars[chars_len-1];
-                    result.push(next_char.0);
-                    if next_char.1 <= 1 {
-                        chars.pop();
-                        if chars.len() > 1 {
-                            swap = !swap;
-                        }
-                    }
-                    else {
-                        chars[chars_len-1].1 -= 1;
-                        swap = !swap;
-                    }
+                chars.push(charcount);
+            }
+            else {
+                result.push(charcount.0);
+                last_char = Some(charcount.0);
+                charcount.1 -= 1;
+                if charcount.1 > 0 {
+                    chars.push(charcount);
                 }
-                println!("{result:?}");
             }
         }
 
