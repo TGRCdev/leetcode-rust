@@ -40,3 +40,4 @@ pub mod find_critical_edges;
 pub mod excel_sheet_column_name;
 pub mod reorganize_string;
 pub mod minimum_shop_penalty;
+pub mod extra_characters;
