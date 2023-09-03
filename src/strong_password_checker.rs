@@ -94,7 +94,6 @@ impl Solution {
 			let splits = repeated_sections.last_mut().unwrap();
 			if *splits <= removable_splits {
 				removable_splits -= *splits;
-				drop(splits);
 				repeated_sections.pop();
 			}
 			else {

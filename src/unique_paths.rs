@@ -15,6 +15,6 @@ impl Solution {
             }
         }
 
-        return grid_paths[0];
+        grid_paths[0]
     }
 }

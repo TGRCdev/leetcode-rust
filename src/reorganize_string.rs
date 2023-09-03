@@ -26,6 +26,7 @@ impl From<(u8,u16)> for CharCount {
 impl Solution {
     pub fn reorganize_string(s: String) -> String {
         use std::collections::{BinaryHeap, HashMap};
+        #[allow(unused_imports)]
         use std::iter::FromIterator;
         let len = s.len();
 

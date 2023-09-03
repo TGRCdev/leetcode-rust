@@ -126,7 +126,7 @@ impl Solution {
 
             // Test for critical edge
             let old_edge = edges.remove(i);
-            if let Some((weight, mst)) = Self::find_mst(n, &edges) {
+            if let Some((weight, _)) = Self::find_mst(n, &edges) {
                 if weight <= base_weight {
                     critical.remove(&old_edge);
                 }
