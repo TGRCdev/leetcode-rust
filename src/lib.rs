@@ -44,3 +44,4 @@ pub mod extra_characters;
 pub mod unique_paths;
 pub mod split_linked_list;
 pub mod pascal_triangle;
+pub mod combination_sum_iv;
