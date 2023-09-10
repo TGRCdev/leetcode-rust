@@ -45,3 +45,4 @@ pub mod unique_paths;
 pub mod split_linked_list;
 pub mod pascal_triangle;
 pub mod combination_sum_iv;
+pub mod count_valid_deliveries;
